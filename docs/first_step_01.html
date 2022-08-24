@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <link rel="icon" href="icons/favicon.ico" />
+  <link rel="apple-touch-icon" size="180x180" href="icons/icon-180.png" />
+  <link rel="stylesheet" href="igo.css" />
+  <script src="igo.js?ver=20200514"></script>
+  <script src="igo_view.js?ver=20200514"></script>
+  <title>js_igo examples</title>
+  <style>
+    section {
+      margin-left: 2rem;
+    }
+
+    h2 {
+      margin-left: -1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>使用例 - js_igo</h1>
+  <section>
+    <h2>詰碁</h2>
+    <p>囲碁でとりあえず、9路盤で終盤まで打てるようになる為の詰碁集</p>
+    <script>
+      new igo.GameView(
+        // placement
+        // - <parentNode or ID>
+        // - {under:<parentNode or ID>}
+        // - {after:<previousSibling or ID>}
+        // - {before:<nextSibling or ID>}
+        // - <script element or ID> (same as {after:<script element or ID>})
+        // - null
+        //     (ex:
+        //       const gameView = new igo.GameView(null);
+        //       parent.appendChild(gameView.rootElement);
+        //       gameView.fitBoardSizeToWindowAndParent();
+        //     )
+        { after: document.currentScript },
+
+        // game object
+        // - new igo.Game(19)
+        // - igo.Game.fromSGF("<SGF>")
+        // - "<SGF>"
+        // - undefined  (default:9x9 board)
+        igo.Game.fromSGF("(;GM[1]SZ[9]VW[da:id]C[黒番です。２眼を作って生きてください。\n]AW[ea]AB[fa]AW[eb]AB[fb:ib]AW[ec:ic](;B[ga];W[ha];B[ia];W[ha]C[全部取られちゃった！])(;B[ha]C[白はもう打てません。成功！])(;B[ia];W[ga];B[ha];W[ga]C[全部取られちゃった！]))"),
+
+        // options
+        {
+          ui: { top: ["Comment"], bottom: ["UndoRedo"] },
+          showComment: true,
+
+          editable: false,
+          showBranchText: true,
+          showLastMoveMark: true,
+          preventRedoAtBranchPoint: true,
+          autoMove: igo.WHITE,
+          //path: ["ia","ha"]
+        }
+      );
+    </script>
+  </section>
+  <section>
+    <h2>マークのテスト</h2>
+    <p>SGFのマークには次のものがあります。</p>
+    <ul>
+      <li>CR:○</li>
+      <li>TR:△</li>
+      <li>SQ:□</li>
+      <li>MA:×</li>
+      <li>LB:テキスト</li>
+    </ul>
+    <script>
+      new igo.GameView(
+        { before: document.currentScript },
+        "(;GM[1]SZ[9]VW[ba:ie]AW[db]AB[eb]AB[hb:ib]AW[ec]AB[fc:gc]AW[hc]AW[dd]AW[fd:hd]LB[da:a]LB[ic:b]C[黒番です。さあどこに打ちますか？naもbも脱出できなそうですね。](;B[ga];W[fb]TR[fc]TR[gc]C[あ、△二子が取られちゃう！];B[gb]C[助けると……];W[ea]SQ[eb]C[□がとられちゃいました……];B[fa]C[後からコウ材にはなるかもしれません];W[eb];B[ic];W[id];B[ha];W[ia]C[全部取られちゃった！])(;B[fb](;W[ga](;B[gb];W[ha];B[ea];W[da];B[ic];W[id];B[ia];W[fa]C[全部取られちゃった！])(;B[ha];W[ea](;B[fa];W[gb]C[全部取られちゃった！])(;B[gb];W[fa];B[da];W[ea];B[fa];W[ca];B[ea];W[cb];B[ic];W[id]CR[ga]CR[ia]C[○目が二つあるので活きです])))(;W[ha];B[ga];W[ea];B[ia];W[fa];B[da];W[ea];B[fa];W[cb]CR[ha]CR[gb]C[○目が二つあるので活きです]))(;B[fa](;W[gb]TR[fc]TR[gc]C[△二子があたりです。];B[fb];W[ga];B[ha]C[活きました！])(;W[ga](;B[gb];W[ea];B[da];W[ca];B[ha])(;B[ha];W[ea](;B[fb];W[gb])(;B[da];W[ca];B[fb];W[ea];B[gb]))))(;B[ea](;W[fb];B[gb];W[fa];B[ga];W[da]C[活きた！])(;W[gb];B[fb];W[ga](;B[fa];W[da])(;B[ha];W[da];B[fa]C[活きた！]))(;W[ha];B[ga];W[fb];B[gb];W[da];B[fa]C[活きた！])(;W[ga];B[gb];W[da](;B[fa];W[fb])(;B[fb];W[ha];B[ic];W[ia];B[id];W[ie];B[fa];W[ha];B[he];W[ia];B[ga];W[ha];B[ia];W[ha])(;B[ha];W[fa];B[fb]))(;W[fa];B[fb];W[ga];B[ha];W[da];B[gb]C[活き！])))",
+        {
+          ui: { top: ["Comment"], bottom: ["UndoRedo", "ToggleMoveNumber"] },
+          showComment: true,
+
+          editable: false,
+          showBranchText: true,
+          showLastMoveMark: true,
+          preventRedoAtBranchPoint: true,
+          autoMove: igo.WHITE,
+        });
+    </script>
+  </section>
+  <section>
+    <h2>19路盤</h2>
+    <p>19路盤を置いてみます。自由に打ってください。<a href="index.html">単独のページはこちら</a></p>
+    <script>
+      new igo.GameView(document.currentScript, new igo.Game(19));
+    </script>
+  </section>
+  <section>
+    <h2>data属性テスト</h2>
+    <p>divにdata属性を設定しておいて後から碁盤に変換することもできます。</p>
+
+    <script>
+      window.addEventListener("load", ev => {
+        for (elem of document.querySelectorAll("div[data-igo-sgf]")) {
+          new igo.GameView(
+            elem,
+            elem.dataset.igoSgf,
+            JSON.parse(elem.dataset.igoOpt));
+        }
+      });
+    </script>
+
+    <div
+      data-igo-sgf="(;GM[1]SZ[9]VW[da:id]C[黒番です。さあどこに打ちますか？]AW[ea]AB[fa]AW[eb]AB[fb:ib]AW[ec:ic](;B[ga];W[ha];B[ia];W[ha]C[全部取られちゃった！])(;B[ha]C[白はもう打てません。成功！])(;B[ia];W[ga];B[ha];W[ga]C[全部取られちゃった！]))"
+      data-igo-opt='{"ui":{"top":["Comment"],"bottom":["UndoRedo"]},"showComment":true}'>
+    </div>
+  </section>
+</body>
+
+</html>
